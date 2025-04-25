@@ -1,0 +1,59 @@
+conditions for SELL order:
+        # Condition: current candle is bullish candle (green candle)
+        is_current_bullish = close_current > open_current 
+
+        # Condition: previous two candle is bearish candle (red candle)
+        is_contiguous_red = close_prev < open_prev  and close_prev2 < open_prev2
+
+        # Condition: both previous two candle is bearish candle (red candle) are not overlapping (inside candles)
+        is_prev_lower_than_prev2 = low_prev2 > low_prev  
+
+        # condition: prev_high should not cross prev2_High
+        is_prev1_high_not_crossed_prev2 = high_prev2 > high_prev
+
+        # Condition: current high not crossing 1st red candle high
+        is_current_below_prev2_high = high_current <= high_prev2 
+
+        # condition : drop in 2nd (prev1) candle should be less than 40
+        is_prev_candle_drop_less_than_40 = high_prev - low_prev < 40      
+
+
+condition for buy order :
+
+        # rsi should been less than 30 at least once, but currently it should be greater than 30
+
+
+        # Condition: current candle is bearish candle (red candle)
+        is_current_bullish = close_current < open_current 
+
+        # Condition: previous two candle is bullish candle (green candle)
+        is_contiguous_green = close_prev > open_prev  and close_prev2 > open_prev2
+
+        # Condition: both previous two candle is bullish candle (green candle) are not overlapping (inside candles)
+        is_prev_greater_than_prev2 = high_prev2 < high_prev  
+
+        # Condition: current low not crossing 1st green candle low
+        is_low_current_below_prev2_low = low_current <= low_prev2 
+
+        # condition : gain in 2nd (prev1) candle should be less than 40
+        is_prev_candle_drop_less_than_40 = high_prev - low_prev < 40    
+
+
+
+        ---------------------------
+        stop_loss = min(low_prev, low_current)
+
+        when to trigger buy order: ltp > high_current
+
+        #update high_current and high_prev for stoploss
+        high_current = candle_current[2]
+        high_prev = candle_prev[2] 
+
+        --> #update high_current and high_prev for stoploss
+        LOW_current = candle_current[3]
+        low_prev = candle_prev[3] 
+
+        
+
+
+
