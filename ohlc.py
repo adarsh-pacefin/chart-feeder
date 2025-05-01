@@ -4,6 +4,7 @@ import logging
 import numpy as np
 from datetime import datetime, timedelta
 from PocketfulAPI.pocketfulwebsocket import PocketfulSocket
+from PocketfulAPI.pocketful import Pocketful
 
 
 #1. Fetch data every 3 minutes to get the latest candles and calculate RSI.
@@ -451,9 +452,15 @@ def log_event(message, level="info"):
 
 if __name__ == '__main__':
    
-   clientId = "PA0002"
-   accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJibGFja2xpc3Rfa2V5IjoiUEEwMDAyOnFOZmhsQS8rU002ZzJEOU41em40VHciLCJjbGllbnRfaWQiOiJQQTAwMDIiLCJjbGllbnRfdG9rZW4iOiJRVEV5T0VkRFRRLjN6d0N5RWZuWHZ3bl9keEU3YWRRVFNfNTFHOC0yd01uMWxQMEg2d2JES1YzdW9abmNEZEFLQVYzQlRjLnNtblQ4aWhEOTIyNWlQZmcuR085RkFaTThBczNuY2JSZThPUUlhYWpZQ00waEhacDh3V3ZyTGo4NVZzdXJKbk0xeFE1ZFd4cUZvYlZUUUtHb0xITWx4LThLZThEM09TWU1hN1N3YWt4LXVWMnFPWHpRX1o0dlhoMXV3REJBRl9xejhtNWU1cmdmWkIxVmlvc0dDc0JMTWh1aGp5SS11S09SRTNHaC5ZNUw0M21ETnFvSVVFV09FWDJ5ckpBIiwiZGV2aWNlIjoid2ViIiwiZGV2aWNlX2lkIjpudWxsLCJpcCI6bnVsbCwiZXhwIjoxNzQzMjI1MjYyOTQxfQ.tj0yHV0Zjz7CgGshrsUw22llgHfNXYk_2gARgkw3S20"
+   clientId = "YA0002"
+   password = "Yash@123"
    exchangeCode = 1
    instrumentToken = 26000
+   
+   pocket = Pocketful(clientId=clientId)
+   data = pocket.generateSession(client_id=clientId, password=password, totp="123456")
+   access_token = data["data"]["auth_token"]
+   pocket.setAccessToken(access_token)
+
    log_event("-------------------------started-------------------------------")
-   check_strategy(clientId, accessToken, exchangeCode, instrumentToken)
+   check_strategy(clientId, access_token, exchangeCode, instrumentToken)

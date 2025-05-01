@@ -88,6 +88,9 @@ class Pocketful(object):
         # fno data
         "api.nfodata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}",
         "api.nfoLtpdata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}&key=last_trade_price",
+
+        "api.login": "/api/v3/user/login",
+        "api.twofa": "/api/v3/user/twofa",
     }
 
 
@@ -233,8 +236,37 @@ class Pocketful(object):
                 content_type=headers["Content-type"],
                 content=r.content))
         
+    def login(self, client_id,password):
+        """Login into Pacefin.""" 
+        payload ={
+        "channel_id": client_id,
+        "channel_secret": password
+        }
+        data = self._postRequest("api.login",payload)
+        return data
 
+    def generateSession(self,client_id,password,totp):
+        """Login into Pacefin.""" 
+        login_data=self.login(client_id,password)
 
+        if login_data["status"]=="success":
+            payload = {"login_id":client_id,
+                    "twofa":[{"question_id":22,"answer":totp}],
+                                "twofa_token":login_data["data"]["twofa"]["twofa_token"],"type":"PIN","device_type":"web"
+                        }
+
+            data = self._postRequest("api.twofa",payload)
+            # if data["status"]=="success":
+            #     self.setAccessToken(data["data"]["auth_token"])
+                # return data
+            return data
+        return login_data
+    
+    def setAccessToken(self, access_token):
+        """Set the `access_token` received after a successful authentication."""
+        self.access_token = access_token
+        return self.access_token
+    
         
     def _deleteRequest(self, route, params=None):
         """Alias for sending a DELETE request."""
